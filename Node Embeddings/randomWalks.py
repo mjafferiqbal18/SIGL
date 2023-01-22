@@ -1,7 +1,7 @@
 import json
 import random
 import sys
-#import gensim
+from gensim.models import Word2Vec
 
 with open("onedrive-test.json") as line:
     graph = json.load(line)
@@ -72,4 +72,27 @@ def randomWalk(length,frequency,exe):
 
 
 
-print(randomWalk(3,3,sys.argv[1]))
+#print(randomWalk(3,3,sys.argv[1]))
+
+walk_paths = [['hi', 'bn', 'onedrive', 'usr', 'bin', 'onedrive.dpkg-new', 'usr', 'bin', 'dpkg'], ['usr', 'bin', 'onedrive', 'usr', 'bin', 'onedrive.dpkg-new', 'usr', 'bin', 'dpkg'], ['usr', 'bin', 'onedrive', 'usr', 'bin', 'onedrive.dpkg-new', 'usr', 'bin', 'dpkg']]
+#walk_paths = randomWalk(3,3,sys.argv[1])
+
+print(type(walk_paths))
+
+embedder = Word2Vec(
+   window=2, sg=1, hs=0
+)
+
+# Build Vocabularys
+embedder.build_vocab(walk_paths)
+
+
+# Train
+embedder.train(
+   walk_paths, total_examples=embedder.corpus_count, epochs=20
+)
+
+word_vectors = embedder.wv
+word_vectors.save("word2vec.wordvectors")
+
+#embedder.save("word2vec.model")
