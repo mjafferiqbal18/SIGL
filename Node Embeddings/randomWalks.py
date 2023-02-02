@@ -3,12 +3,9 @@ import random
 import sys
 from gensim.models import Word2Vec
 
-with open("onedrive-test.json") as line:
+with open(sys.argv[1]) as line:
     graph = json.load(line)
 
-
-# if len(sys.argv) > 2:
-#     print("Error:you can only pass one argument")
 
 def generatePairs():
     pair = dict()
@@ -74,25 +71,32 @@ def randomWalk(length,frequency,exe):
 
 #print(randomWalk(3,3,sys.argv[1]))
 
-walk_paths = [['hi', 'bn', 'onedrive', 'usr', 'bin', 'onedrive.dpkg-new', 'usr', 'bin', 'dpkg'], ['usr', 'bin', 'onedrive', 'usr', 'bin', 'onedrive.dpkg-new', 'usr', 'bin', 'dpkg'], ['usr', 'bin', 'onedrive', 'usr', 'bin', 'onedrive.dpkg-new', 'usr', 'bin', 'dpkg']]
-#walk_paths = randomWalk(3,3,sys.argv[1])
-
-print(type(walk_paths))
-
-embedder = Word2Vec(
-   window=2, sg=1, hs=0
-)
-
-# Build Vocabularys
-embedder.build_vocab(walk_paths)
+walk_paths = randomWalk(3,3,sys.argv[2])
 
 
-# Train
-embedder.train(
-   walk_paths, total_examples=embedder.corpus_count, epochs=20
-)
 
-word_vectors = embedder.wv
-word_vectors.save("word2vec.wordvectors")
 
-#embedder.save("word2vec.model")
+
+print(walk_paths)
+
+with open("Dataset.txt", "a") as f:
+    for s in walk_paths:
+        f.write(" ".join(s))
+        f.write('\n')
+
+# embedder = Word2Vec(window=5, sg=1, hs=0, min_count=1
+# )
+
+# # Build Vocabularys
+# embedder.build_vocab(walk_paths)
+
+
+# # Train
+# embedder.train(
+#    walk_paths, total_examples=embedder.corpus_count, epochs=20
+# )
+
+# # word_vectors = embedder.wv
+# # word_vectors.save("word2vec.wordvectors")
+
+# embedder.save("word2vec.model")

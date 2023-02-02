@@ -2,25 +2,26 @@ import json
 import sys
 import random
 from gensim.models import Word2Vec
+from gensim.models import KeyedVectors
 
-# with open("onedrive-test.json") as line:
-#     graph = json.load(line)
-
-
-# def generatePairs():
-#     pair = dict()
-#     for i in graph:
-#         if "id" in i:
-#             if i['type'] == "Artifact":
-#                 pair[i['id']] = i['annotations']['path']
-#             if i['type'] == "Process":
-#                 pair[i['id']] = i['annotations']['exe']
-#         else:
-#             break
-#     return pair
+with open("onedrive-test.json") as line:
+    graph = json.load(line)
 
 
-# nodes = generatePairs()
+def generatePairs():
+    pair = dict()
+    for i in graph:
+        if "id" in i:
+            if i['type'] == "Artifact":
+                pair[i['id']] = i['annotations']['path']
+            if i['type'] == "Process":
+                pair[i['id']] = i['annotations']['exe']
+        else:
+            break
+    return pair
+
+
+nodes = generatePairs()
 
 # def getSum(path):
 #     components = splitComponents(path)
@@ -35,16 +36,17 @@ from gensim.models import Word2Vec
 
 
 
-# def splitComponents(pathName):
-#     componentList = pathName.split("/")
-#     componentList.pop(0)
-#     return componentList
+def splitComponents(pathName):
+    componentList = pathName.split("/")
+    componentList.pop(0)
+    return componentList
 
 
 # print(getSum('/usr/bin/python'))\
 
+print(nodes)
 
-model = Word2Vec.load("word2vec.model")
+wv = KeyedVectors.load("word2vec.wordvectors", mmap='r')
 
 
-print(model.wv.most_similar('usr', topn=4))
+print(wv['usr'])
