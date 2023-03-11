@@ -1,7 +1,6 @@
 import json
 import random
 import sys
-#from gensim.models import Word2Vec
 import numpy as np
 
 
