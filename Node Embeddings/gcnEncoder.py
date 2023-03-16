@@ -7,8 +7,13 @@ import pandas as pd
 import stellargraph as sg
 from stellargraph.mapper import FullBatchNodeGenerator
 from stellargraph.layer import GCN
-import tensorflow
+from tensorflow import keras
 
+from keras import layers, optimizers, losses, metrics, Model, models
+from keras.models import Sequential
+from keras.layers import Flatten
+from keras.layers import Dense
+from keras.layers import Activation
 
 with open("onedrive.json") as line:
     graph = json.load(line)
@@ -58,7 +63,7 @@ final_edges = {"source": src, 'target': dest}
 
 square_edges = pd.DataFrame(final_edges)
 
-print(square_edges)
+#print(square_edges)
 
 def splitComponents(pathName):
     componentList = pathName.split("/")
@@ -68,7 +73,7 @@ def splitComponents(pathName):
 
 # print(getSum('/usr/bin/python'))\
 
-print(node_paths)
+#print(node_paths)
 
 wv = KeyedVectors.load("word2vec.wordvectors", mmap='r')
 
@@ -84,7 +89,7 @@ def getSum(path):
         embeddingmatrix.append(wv[components[0]])
 getSum("")
 
-
+print(len(embeddingmatrix), len(embeddingmatrix[0]))
 
 embed = pd.DataFrame(embeddingmatrix, index = nodes.keys())
 
@@ -99,4 +104,11 @@ gcn = GCN(
 
 x_inp, x_out = gcn.in_out_tensors()
 
-print(x_out)
+embedding_model = Model(inputs=x_inp, outputs=x_out)
+
+all_gen = generator.flow(embed.index)
+
+emb = embedding_model.predict(all_gen)
+
+emb = emb[0]
+print(emb.shape)
