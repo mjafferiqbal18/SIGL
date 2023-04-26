@@ -1,5 +1,4 @@
 #This contains all the dataset on which SIGL is trained. 
-
 All the data is contained in dataset.json
 
 In order to add more training graphs perform the following steps:
