@@ -61,7 +61,7 @@ for graph in dataset:
 
 
 
-with open("Dataset.txt", "w") as f:
+with open("./ALaCarte/Dataset.txt", "w") as f:
     for i in paths:
         for s in i:
             f.write(" ".join(s))

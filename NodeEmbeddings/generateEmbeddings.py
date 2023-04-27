@@ -2,7 +2,7 @@ from gensim.models import Word2Vec
 
 data = []
 
-with open("Dataset.txt", "r") as f:
+with open("./ALaCarte/Dataset.txt", "r") as f:
   for line in f:
     data.append(line.split())
 

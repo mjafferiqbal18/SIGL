@@ -3,6 +3,7 @@ import pandas as pd
 import json
 from tensorflow import keras
 from keras import layers, optimizers, losses, metrics, Model, models
+from keras.layers import Input, Dense, Dropout
 from stellargraph.mapper import GraphSAGENodeGenerator
 from stellargraph.layer import GraphSAGE
 from createStellarGraphs import getGraphs
@@ -10,40 +11,74 @@ from stellargraph.mapper import FullBatchNodeGenerator
 from stellargraph.layer import GCN
 import stellargraph as sg
 
+
+
+# Define the list of GraphStellar graphs
 graphs = getGraphs()
 
-print(graphs)
+input_layer = Input(shape=(128,))
 
-batch_size = 32
-num_samples = [10, 5]
+# Define the encoder layers
+encoded = Dense(64, activation='relu')(input_layer)
+encoded = Dropout(0.2)(encoded)
+encoded = Dense(32, activation='relu')(encoded)
 
-generator = sg.mapper.PaddedGraphGenerator(graphs)
-gc_model = sg.layer.GCNSupervisedGraphClassification(
-    [64, 32], ["relu", "relu"], generator, pool_all_layers=True
-)
+# Define the decoder layers
+decoded = Dense(64, activation='relu')(encoded)
+decoded = Dropout(0.2)(decoded)
+decoded = Dense(128, activation='sigmoid')(decoded)
 
-x_inp, x_out = gc_model.in_out_tensors()
+# Define the autoencoder model
+autoencoder = Model(inputs=input_layer, outputs=decoded)
 
-decoder = layers.Dense(128, activation="linear")(x_out)
+# Compile the autoencoder model
+autoencoder.compile(optimizer='adam', loss='mean_squared_error')
 
-model = Model(inputs=x_inp, outputs=decoder)
-model.compile(
-    optimizer=optimizers.Adam(learning_rate=0.01),
-    loss=losses.MeanSquaredError(),
-    metrics=[metrics.MeanAbsoluteError()],
-)
+# Train the autoencoder model on all graphs
+for i, graph in enumerate(graphs):
+    nodes = graph.node_features() 
+    autoencoder.fit(nodes, nodes, epochs=50, batch_size=32)
 
-autoencoder = Model(inputs=x_inp, outputs=model(x_inp))
 
-num_epochs = 200
 
-# Get the node features as target data
-target_data = graphs.node_features()
 
-# Create a generator flow with the target data
-batch = generator.flow(graphs.nodes(), target_data)
+reconstructed_nodes = autoencoder.predict(graphs[1].node_features())
 
-history = model.fit(batch, epochs=num_epochs, verbose=1)
+
+mse = np.mean(np.power(graphs[1].node_features() - reconstructed_nodes, 2))
+
+print(f"Reconstruction MSE: {mse}")
+
+# batch_size = 32
+# num_samples = [10, 5]
+
+# generator = sg.mapper.PaddedGraphGenerator(graphs)
+# gc_model = sg.layer.GCNSupervisedGraphClassification(
+#     [64, 32], ["relu", "relu"], generator, pool_all_layers=True
+# )
+
+# x_inp, x_out = gc_model.in_out_tensors()
+
+# decoder = layers.Dense(128, activation="linear")(x_out)
+
+# model = Model(inputs=x_inp, outputs=decoder)
+# model.compile(
+#     optimizer=optimizers.Adam(learning_rate=0.01),
+#     loss=losses.MeanSquaredError(),
+#     metrics=[metrics.MeanAbsoluteError()],
+# )
+
+# autoencoder = Model(inputs=x_inp, outputs=model(x_inp))
+
+# num_epochs = 200
+
+# # Get the node features as target data
+# target_data = graphs.node_features()
+
+# # Create a generator flow with the target data
+# batch = generator.flow(graphs.nodes(), target_data)
+
+# history = model.fit(batch, epochs=num_epochs, verbose=1)
 
 
 
