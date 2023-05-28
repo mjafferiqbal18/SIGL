@@ -37,7 +37,7 @@ autoencoder.compile(optimizer='adam', loss='mean_squared_error')
 # Train the autoencoder model on all graphs
 for i, graph in enumerate(graphs):
     nodes = graph.node_features() 
-    autoencoder.fit(nodes, nodes, epochs=50, batch_size=32)
+    autoencoder.fit(nodes, nodes, epochs=3, batch_size=32)
 
 
 
