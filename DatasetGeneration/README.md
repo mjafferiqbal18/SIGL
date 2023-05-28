@@ -2,7 +2,7 @@
 
 All the SIGs for a particular type of training data is combined and compressed into the dataset.json files
 
-For eg. apt-graphs contains many SIGS from apt software installations. All the information required from those SIGs is stored in the apt-dataset.json file
+For eg. apt-graphs contains many SIGs from apt software installations. All the information required from those SIGs is stored in the apt-dataset.json file
 
 The generateTrainingData.py file is used to add to the training data
 
