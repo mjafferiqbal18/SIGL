@@ -10,10 +10,8 @@ stellarGraphs = []
 
 def getGraphs():
     
-    with open("../DatasetGeneration/dataset.json") as line:
+    with open("../DatasetGeneration/apt-dataset.json") as line:
         graphs = json.load(line)
-
-    print(len(graphs))
 
     for graph in graphs:
 
@@ -57,8 +55,8 @@ def getGraphs():
         def word2vec(components):
             summed_matrix = np.zeros(128)     
             for component in components:
-                    summed_matrix = summed_matrix  + wv[component]
-                    normalized_matrix = summed_matrix / len(components)
+                summed_matrix = summed_matrix  + wv[component]
+            normalized_matrix = summed_matrix / len(components)
             return normalized_matrix    
 
         def alacarte(components):
