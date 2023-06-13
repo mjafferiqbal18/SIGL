@@ -15,16 +15,24 @@ edges = list()
 hashnames = dict()
 process = dict()
 
+
+exclude = []
 for i in graph:
+
     if "id" in i:
         if i['type'] == "Artifact":
-            hashnames[i['id']] = i['annotations']['path']
-            process[i['id']] = 0
+            if i["annotations"]["subtype"] == "file" or i["annotations"]["subtype"] == "link":
+                hashnames[i['id']] = i['annotations']['path']
+                process[i['id']] = 0
+            else:
+                exclude.append(i["id"])
         if i['type'] == "Process":
             hashnames[i['id']] = i['annotations']['exe']
             process[i['id']] = 1
     else:
-        edges.append((i['to'],i['from']))
+        if i['to'] not in exclude and i["from"] not in exclude:
+            edges.append((i['to'],i['from']))
+        
 
 
 json_dict = {

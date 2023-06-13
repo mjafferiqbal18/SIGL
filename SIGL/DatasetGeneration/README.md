@@ -18,6 +18,6 @@ python generateTraining.py "fileName.json" "executableLocation"
 
 Onedrive example:
 
-  python generateTraining.py onedrive.json /usr/bin/onedrive
+  python generateTrainingData.py onedrive.json /usr/bin/onedrive
 
 
