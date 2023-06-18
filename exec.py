@@ -20,9 +20,10 @@ def main():
 
     threshold = np.float32(content)
 
-    for i in loss.values():
-        if i > threshold:
-            abnormal = True
+    score = np.mean(list(loss.values()))
+
+    if score > threshold:
+        abnormal = True
 
     if abnormal == True:
 
