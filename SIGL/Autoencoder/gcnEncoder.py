@@ -44,7 +44,7 @@ def autoencoder():
 
     autoencoder.fit(embeddings, embeddings, epochs=100, batch_size=32)
 
-    autoencoder.save("myModel.h5")
+    autoencoder.save("autoencoder.h5")
 
 
 

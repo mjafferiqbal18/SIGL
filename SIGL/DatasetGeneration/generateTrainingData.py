@@ -3,9 +3,9 @@ import json
 import sys
 
 
-def processSPADEJSON(fileName,executableName):
+def processSPADEJSON(fileName,directory,executableName):
 
-    with open(fileName) as line:
+    with open(directory) as line:
         graph = json.load(line)
 
     edges = [] # Edges in the graph represented as a list of tuples
@@ -80,7 +80,7 @@ def generateDataset():
     directory = f"./graphs/{sys.argv[1]}"
     executableName = sys.argv[2]
 
-    jsonDict = processSPADEJSON(directory,executableName)
+    jsonDict = processSPADEJSON(sys.argv[1],directory,executableName)
 
     try:
         with open('dataset.json', 'r') as f:
