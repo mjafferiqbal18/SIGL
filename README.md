@@ -27,10 +27,9 @@ If the training data is modified, you will need to retrain the model using the f
 python training.py
 ```
 
-The threshold used to determine anomalous processes is computed in validation phase. In order to adjust the threshold modify `validation.py`. If any the model is retrained or the threshold is adjusted, you will need to recompute it using the following:
+The threshold used to determine anomalous processes is computed in validation phase. In order to adjust the threshold modify `validation.py`. If the model is retrained or the threshold is adjusted, you will need to recompute it using the following:
 
 ```bash
 python validation.py
 ```
 
-.....
