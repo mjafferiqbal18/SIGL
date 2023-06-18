@@ -5,7 +5,7 @@ from SIGL.DatasetGeneration.generateTrainingData import processSPADEJSON
 from keras.models import load_model
 from SIGL.Autoencoder.createStellarGraphs import convertToStellar, splitComponents
 from gensim.models import KeyedVectors
-from SIGL.NodeEmbeddings.ALaCarte.gen import alacarte
+from SIGL.NodeEmbeddings.carte.gen import alacarte
 from jenkspy import JenksNaturalBreaks
 import sys
 
@@ -116,6 +116,5 @@ def main():
     print("Done")
 
 
-
-if sys.argv[0] == "validation.py":
+if len(sys.argv) == 1:
     main()

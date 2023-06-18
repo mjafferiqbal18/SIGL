@@ -13,7 +13,7 @@ def alacarte(targets,graph):
 
     path = walks(graph)
 
-    with open("SIGL/NodeEmbeddings/ALaCarte/Dataset.txt", "w") as f:
+    with open("SIGL/NodeEmbeddings/carte/Dataset.txt", "w") as f:
         
         for s in path:
             f.write(" ".join(s))
@@ -23,20 +23,20 @@ def alacarte(targets,graph):
         dictionary[word] = wv[word]
 
 
-    with open('SIGL/NodeEmbeddings/ALaCarte/source.txt', 'w') as file:
+    with open('SIGL/NodeEmbeddings/carte/source.txt', 'w') as file:
         for key, value in dictionary.items():
             file.write(key + ' ' + ' '.join(str(v) for v in value) + '\n')
 
-    with open('SIGL/NodeEmbeddings/ALaCarte/targets.txt', 'w') as file:
+    with open('SIGL/NodeEmbeddings/carte/targets.txt', 'w') as file:
         for target in targets:
             file.writelines(target + '\n')
 
     
 
-    command = ["python", "SIGL/NodeEmbeddings/ALaCarte/alacarte.py", "output", "-s", "SIGL/NodeEmbeddings/ALaCarte/source.txt", "-c", "SIGL/NodeEmbeddings/ALaCarte/Dataset.txt", "-w", "5"]
+    command = ["python", "SIGL/NodeEmbeddings/carte/alacarte.py", "output", "-s", "SIGL/NodeEmbeddings/carte/source.txt", "-c", "SIGL/NodeEmbeddings/carte/Dataset.txt", "-w", "5"]
     subprocess.run(command)
 
-    command2 = ["python", "SIGL/NodeEmbeddings/ALaCarte/alacarte.py", "output", "-s", "SIGL/NodeEmbeddings/ALaCarte/source.txt", "-c", "SIGL/NodeEmbeddings/ALaCarte/Dataset.txt", "-w", "5", "-t" , "SIGL/NodeEmbeddings/ALaCarte/targets.txt"]
+    command2 = ["python", "SIGL/NodeEmbeddings/carte/alacarte.py", "output", "-s", "SIGL/NodeEmbeddings/carte/source.txt", "-c", "SIGL/NodeEmbeddings/carte/Dataset.txt", "-w", "5", "-t" , "SIGL/NodeEmbeddings/carte/targets.txt"]
     subprocess.run(command2)
 
     
