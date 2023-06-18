@@ -8,7 +8,7 @@ def source(word_vectors):
     for i in word_vectors.index_to_key:
       src.append({i:word_vectors.get_vector(i)})
 
-    with open("SIGL/NodeEmbeddings/ALaCarte/source.txt", "w") as f:
+    with open("SIGL/NodeEmbeddings/carte/source.txt", "w") as f:
       for i in src:
           for key,value in i.items():
             f.write(key + ' ' + ' '.join(str(v) for v in value) + '\n')
