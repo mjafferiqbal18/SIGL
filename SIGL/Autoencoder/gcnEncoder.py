@@ -12,7 +12,6 @@ def autoencoder():
 
     graphs = getGraphs()
 
-
     generator = sg.mapper.PaddedGraphGenerator(graphs)
 
     gc_model = sg.layer.GCNSupervisedGraphClassification(

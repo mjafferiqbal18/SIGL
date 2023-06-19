@@ -77,29 +77,27 @@ def processSPADEJSON(fileName,directory,executableName):
 
 def generateDataset():
 
-    directory = f"./graphs/{sys.argv[1]}"
-    executableName = sys.argv[2]
+    graphs = os.listdir("SIGL/DatasetGeneration/graphs")
 
-    jsonDict = processSPADEJSON(sys.argv[1],directory,executableName)
+    execmap = {"7zip":"/usr/bin/p7zip", "onedrive":"/usr/bin/onedrive", "skype": "usr/bin/skypeforlinux", "teamviewer":"usr/bin/teamviewer","winrar":"usr/bin/rar","filezilla":"usr/bin/filezilla","shotcut":"/usr/lib/shotcut","pwsafe":"/usr/bin/pwsafe","firefox":"/usr/bin/firefox","dropbox":"/usr/bin/dropbox"}
 
-    try:
-        with open('dataset.json', 'r') as f:
-            output_list = json.load(f)
-    except json.decoder.JSONDecodeError:
-        output_list = []
+    output_list = []
 
-    
-    output_list.append(jsonDict)   
+    for i in graphs:
+        graphName = i.split("-")
+        print(graphName[0],graphName[1][0])
+        directory = f"SIGL/DatasetGeneration/graphs/{i}"
+        executableName = execmap[graphName[0]]
+            
+        jsonDict = processSPADEJSON(graphName[0]+graphName[1][0],directory,executableName)
+
+        output_list.append(jsonDict)   
 
 
-    with open("dataset.json", "w") as f:
+    with open("SIGL/DatasetGeneration/dataset.json", "w") as f:
         f.write("[\n")
         f.write(json.dumps(output_list[0]))
         if len(output_list) > 1:
             for obj in output_list[1:]:
                 f.write(",\n" + json.dumps(obj))
         f.write("\n]")
-
-
-if len(sys.argv) >= 3:
-    generateDataset()

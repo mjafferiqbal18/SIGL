@@ -39,6 +39,7 @@ def alacarte(targets,graph):
     command2 = ["python", "SIGL/NodeEmbeddings/carte/alacarte.py", "output", "-s", "SIGL/NodeEmbeddings/carte/source.txt", "-c", "SIGL/NodeEmbeddings/carte/Dataset.txt", "-w", "5", "-t" , "SIGL/NodeEmbeddings/carte/targets.txt"]
     subprocess.run(command2)
 
+
     
     with open("output_alacarte.txt", 'r') as file:
         for line in file:
@@ -47,7 +48,6 @@ def alacarte(targets,graph):
                 key, *values = line.split()
                 carte[key] = [float(value) for value in values]
         
-    
     files = ["output_alacarte.txt", "output_not_found.txt", "output_source_context_vectors.bin", "output_target_context_vectors.bin", "output_source_vocab_counts.txt", "output_target_vocab_counts.txt", "output_transform.bin"]
     
     for file in files:

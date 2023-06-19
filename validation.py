@@ -22,11 +22,10 @@ def convertGraph(graph, val = True):
     else:
         directory = "testingGraphs"
 
-    if graphName == "skype":
-        testDict = processSPADEJSON(graph,f"./{directory}/{graph}","/usr/bin/skypeforlinux")
-    elif graphName == "teamviewer":
-        testDict = processSPADEJSON(graph,f"./{directory}/{graph}","/usr/bin/teamviewer")
-    
+    execmap = {"7zip":"/usr/bin/p7zip", "onedrive":"/usr/bin/onedrive", "skype": "usr/bin/skypeforlinux", "teamviewer":"usr/bin/teamviewer","winrar":"usr/bin/rar","filezilla":"usr/bin/filezilla","shotcut":"/usr/lib/shotcut","pwsafe":"/usr/bin/pwsafe","firefox":"/usr/bin/firefox","dropbox":"/usr/bin/dropbox"}    
+
+    testDict = processSPADEJSON(graph,f"./{directory}/{graph}",execmap[graphName])
+
     targets = []
 
     wv = KeyedVectors.load("SIGL/NodeEmbeddings/word2vec.wordvectors", mmap='r')
@@ -108,7 +107,7 @@ def main():
 
     std = np.std(thresholdList)
     mean = np.mean(thresholdList)
-    threshold =  mean + 3 * std
+    threshold =  mean + (3 * std)
 
     with open("threshold.txt", "w") as f:
         f.write(str(threshold))
