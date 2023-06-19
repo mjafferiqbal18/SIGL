@@ -46,13 +46,15 @@ def walks(graph):
         nodes = list(graph["hash"].keys())
         frequency = len(nodes)
         result = []
+        counter = 0
         for i in range(frequency):
             sentences = []
             if first == False:
-                ran = random.randint(0,len(nodes)-1)
-                while len(getAllChildren(nodes[ran])) == 0:
-                    ran = random.randint(0,len(nodes)-1)
-                currentNode = nodes[ran]
+                #ran = random.randint(0,len(nodes)-1)
+                #while len(getAllChildren(nodes[ran])) == 0:
+                #    ran = random.randint(0,len(nodes)-1)
+                currentNode = nodes[counter]
+                counter = counter + 1
             else:
                 currentNode = source
                 first = False        
