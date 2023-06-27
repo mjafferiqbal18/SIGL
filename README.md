@@ -14,7 +14,7 @@ python exec.py graphName
 
 SIGL takes in input SIGs in the form of SPADE JSON files
 
-In order to generate your own SIG, execute the following command in the "SIG Generator" folder
+In order to generate your own SIG, read the instructions in the SIGgenerator directory
 
 
 ## Training and Validation
