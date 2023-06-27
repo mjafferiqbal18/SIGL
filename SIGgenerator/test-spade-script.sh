@@ -465,7 +465,7 @@ main_function(){
 
     cp /tmp/$name-audit-$i.log  /home/vagrant/sigl_logs/
   done
-  source ~/SIGL-scripts/spade-query-script.sh $itr $name $exec_path
+  source ~/SIGgenerator/spade-query-script.sh $itr $name $exec_path
 
 }
 
