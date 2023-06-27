@@ -18,7 +18,7 @@ This script will collect Linux Audit Logs and convert them into SIGs in the SPAD
 
 ## Options
 ```bash
--h, --help    Display this help message and exit <br>
+-h, --help    Display this help message and exi
 -l   List the available softwares
 ```
 
