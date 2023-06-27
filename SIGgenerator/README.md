@@ -17,7 +17,8 @@ Exec path:  Specify the executable path of the software <br>
 This script will collect Linux Audit Logs and convert them into SIGs in the SPADE JSON format <br>
 
 ## Options
--h, --help    Display this help message and exit
+<br>
+-h, --help    Display this help message and exit <br>
 -l   List the available softwares
 
 
