@@ -10,13 +10,6 @@ python exec.py graphName
 ```
 
 
-## Data
-
-SIGL takes in input SIGs in the form of SPADE JSON files
-
-In order to generate your own SIG, read the instructions in the SIGgenerator directory
-
-
 ## Training and Validation
 
 The embedding models and the autoencoder model have already been trained.
@@ -33,3 +26,8 @@ The threshold used to determine anomalous processes is computed in validation ph
 python validation.py
 ```
 
+## Data
+
+SIGL takes in input SIGs in the form of SPADE JSON files
+
+In order to generate your own SIG, read the instructions in the SIGgenerator directory
