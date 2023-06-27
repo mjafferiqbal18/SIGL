@@ -11,7 +11,7 @@ To use this Vagrant file, follow the instructions below:
 3. Navigate to the repository directory.
 4. Run the following commands in your terminal:
    
-   ```bash
+```bash
 vagrant up
 vagrant provision
 vagrant ssh
