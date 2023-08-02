@@ -3,6 +3,8 @@ from gensim.models import KeyedVectors
 import numpy as np
 import pandas as pd
 import stellargraph as sg
+import networkx as nx
+import matplotlib.pyplot as plt
 
 def splitComponents(pathName):
         componentList = pathName.split("/")
@@ -10,6 +12,7 @@ def splitComponents(pathName):
         if '' in componentList:
             componentList.remove('')
         return componentList
+
 
 def convertToStellar(graph, validation = False, alacarte = None):
 
@@ -19,6 +22,7 @@ def convertToStellar(graph, validation = False, alacarte = None):
     for edge in graph["edges"]:
         src.append(edge[1])
         dest.append(edge[0])
+
 
     final_edges = {"source": src, 'target': dest}
 
@@ -43,7 +47,8 @@ def convertToStellar(graph, validation = False, alacarte = None):
                 summed_matrix = summed_matrix + alacarte[component]
             else:
                 summed_matrix = summed_matrix  + wv[component]
-        normalized_matrix = summed_matrix / len(components)
+        normalized_matrix = summed_matrix /np.linalg.norm(summed_matrix)
+
         return normalized_matrix    
 
         
