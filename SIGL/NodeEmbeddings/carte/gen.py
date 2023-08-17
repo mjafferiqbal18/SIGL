@@ -1,6 +1,6 @@
 import subprocess
 from gensim.models import KeyedVectors
-from SIGL.NodeEmbeddings.randomWalks import walks
+from SIGL.NodeEmbeddings.randomWalks import randomWalk
 import os
 import time
 
@@ -11,7 +11,7 @@ def alacarte(targets,graph):
 
     wv = KeyedVectors.load("SIGL/NodeEmbeddings/word2vec.wordvectors", mmap='r')
 
-    path = walks(graph)
+    path = randomWalk(15,len(list(graph["hash"].keys())),graph)
 
     with open("SIGL/NodeEmbeddings/carte/Dataset.txt", "w") as f:
         
@@ -53,7 +53,7 @@ def alacarte(targets,graph):
     for file in files:
         if os.path.isfile(file): 
             os.remove(file)
-
+ 
     return carte
 
 

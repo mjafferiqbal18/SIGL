@@ -3,12 +3,12 @@ import numpy as np
 from tensorflow import keras
 from SIGL.DatasetGeneration.generateTrainingData import processSPADEJSON
 from keras.models import load_model
-from SIGL.Autoencoder.createStellarGraphs import convertToStellar, splitComponents
+from SIGL.Autoencoder.createSpekralGraphs import converttoSpektral, splitComponents
 from gensim.models import KeyedVectors
 from SIGL.NodeEmbeddings.carte.gen import alacarte
 from jenkspy import JenksNaturalBreaks
 import sys
-
+from SIGL.Autoencoder.autoencoder import autoencoder
 
 def convertGraph(graph, val = True):
 
@@ -18,9 +18,9 @@ def convertGraph(graph, val = True):
 
     if val == True:
         print(graph)
-        directory = "validationGraphs"
+        directory = "SIGL/DatasetGeneration/validationGraphs"
     else:
-        directory = "testingGraphs"
+        directory = "SIGL/DatasetGeneration/testingGraphs"
 
     execmap = {"7zip":"/usr/bin/p7zip", "onedrive":"/usr/bin/onedrive", "skype": "usr/bin/skypeforlinux", "teamviewer":"usr/bin/teamviewer","winrar":"usr/bin/rar","filezilla":"usr/bin/filezilla","shotcut":"/usr/lib/shotcut","pwsafe":"/usr/bin/pwsafe","firefox":"/usr/bin/firefox","dropbox":"/usr/bin/dropbox"}    
 
@@ -41,7 +41,7 @@ def convertGraph(graph, val = True):
     if len(targets) > 0:
         unseen = alacarte(targets, testDict)
 
-    Graph = convertToStellar(testDict, validation = True, alacarte=unseen)
+    Graph = converttoSpektral(testDict, validation = True, alacarte=unseen)
 
     return (Graph,testDict)
 
@@ -53,25 +53,24 @@ def JenksMaxZoneAvg(nodeLosses):
     return max(np.mean(x.groups_[0]),np.mean(x.groups_[1]),np.mean(x.groups_[2]))
 
 
-def reconstructNodes(graph,autoencoder):
+def reconstructNodes(graph,auto):
 
     Graph,Dict = graph
     processNodes = []
 
-    for i in Dict["types"].keys():
+    for index,i in enumerate(Dict["types"].keys()):
         if Dict["types"][i] == 1:
-            processNodes.append(i)
+            processNodes.append((index,i))
 
-    orignalFeatures = Graph.node_features(nodes = processNodes)
-    newFeatures = autoencoder.predict(orignalFeatures)        
+    emb,adj =  Graph
+    orignalFeatures = emb
+    newFeatures = auto([emb,adj])     
 
     loss = {}
 
-    counter = 0
-    for i in processNodes:
-        mse = np.mean(np.power(newFeatures[counter] - orignalFeatures[counter], 2))
+    for index,i in processNodes:
+        mse = np.mean(np.power(newFeatures[index] - orignalFeatures[index], 2))
         loss[i] = mse
-        counter = counter + 1
 
     return loss
 
@@ -83,7 +82,7 @@ def main():
 
     print("Obtaining Graphs..")
 
-    validationGraphs = os.listdir("./validationGraphs")
+    validationGraphs = os.listdir("SIGL/DatasetGeneration/validationGraphs")
 
     graphs = []
 
@@ -94,13 +93,13 @@ def main():
 
     print("Reconstructing Nodes..")
 
-    autoencoder = load_model("autoencoder.h5")
+    auto = load_model("auto")
 
     thresholdList = []
 
     for i in graphs:
 
-        largestAverageLoss = JenksMaxZoneAvg(list(reconstructNodes(i,autoencoder).values()))
+        largestAverageLoss = JenksMaxZoneAvg(list(reconstructNodes(i,auto).values()))
         thresholdList.append(largestAverageLoss)
 
     print("Setting Threshold..")

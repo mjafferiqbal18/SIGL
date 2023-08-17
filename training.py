@@ -15,7 +15,7 @@ print("Generating embeddings...")
 embeddings()
 
 
-from SIGL.Autoencoder.gcnEncoder import autoencoder
+from SIGL.Autoencoder.autoencoder import autoencoder
 
 print("Training Autoencoder...")
 autoencoder()

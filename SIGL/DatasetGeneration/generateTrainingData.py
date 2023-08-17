@@ -14,52 +14,42 @@ def processSPADEJSON(fileName,directory,executableName):
     process = {} # Stores if a node is a process or artifact
     exclude = [] # Used to remove all non compatible Artifacts e.g. unix sockets
 
-    for i in graph:
-
-        if "id" in i:
-            if i['type'] == "Artifact":
+    for node in graph:
+        # Handling nodes
+        if "id" in node:
+            if node['type'] == "Artifact":
                 try:
-                    hashNames[i['id']] = i['annotations']['path']
-                    process[i['id']] = 0
+                    hashNames[node['id']] = node['annotations']['path']
+                    process[node['id']] = 0
                 except:
-                    exclude.append(i["id"])
-            if i['type'] == "Process":
-                hashNames[i['id']] = i['annotations']['exe']
-                process[i['id']] = 1
+                    exclude.append(node["id"])
+            if node['type'] == "Process":
+                hashNames[node['id']] = node['annotations']['exe']
+                process[node['id']] = 1
+        # Handling edges        
         else:
-                tempEdges.append((i['to'],i['from']))
+            if node['to'] in exclude or node['from'] in exclude:
+                tempEdges.append((node['to'],node['from']))
+            else:
+                if node["to"] != node["from"]:    
+                    edges.append((node['to'],node['from']))
+
+   
+
+    for node in exclude:
+      
+        pre = []
+        post = []
+        for l,r in tempEdges:
+            if l == node:
+                post.append(r)
+            if r == node:
+                pre.append(l)                   
+        for i in pre:
+            for j in post:
+                edges.append((i,j))
 
 
-    def numParents(node):
-        counter = 0
-        for i in tempEdges:
-            if i[0] == node and i[1] not in exclude:
-                counter = counter + 1
-        if counter > 0:
-            return False
-        else: 
-            return True 
-        
-    stop = False
-    while stop == False:
-        stop = True
-        for i in tempEdges:
-            if i[1] in exclude and i[0] not in exclude and numParents(i[0]) == True:
-                exclude.append(i[0])
-                stop = False   
-
-
-    for i in exclude:
-        if i in hashNames.keys():
-            hashNames.pop(i)
-        if i in process.keys():
-            process.pop(i)    
-
-
-    for i in hashNames.keys():
-        for j in tempEdges:
-            if i == j[1] and j[0] not in exclude:
-                edges.append((j[0],j[1]))
 
     jsonDict = {
         "name": fileName,
@@ -85,7 +75,7 @@ def generateDataset():
 
     for i in graphs:
         graphName = i.split("-")
-        print(graphName[0],graphName[1][0])
+
         directory = f"SIGL/DatasetGeneration/graphs/{i}"
         executableName = execmap[graphName[0]]
             

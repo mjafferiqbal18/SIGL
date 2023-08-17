@@ -2,6 +2,9 @@ from validation import convertGraph,reconstructNodes
 import sys
 import numpy as np
 from keras.models import load_model
+from SIGL.Autoencoder.autoencoder import autoencoder
+from keras.optimizers import Adam
+from keras.losses import MeanSquaredError
 
 def main():
 
@@ -10,8 +13,11 @@ def main():
     graph = convertGraph(trainingGraph,val=False)
 
     print("Reconstructing Nodes..")
-    autoencoder = load_model("autoencoder.h5")
-    loss = reconstructNodes(graph,autoencoder)
+    auto = load_model("auto")
+    los = MeanSquaredError()
+    opt = Adam(learning_rate=0.001)
+    auto.compile(optimizer=opt, loss=los)
+    loss = reconstructNodes(graph,auto)
 
     abnormal = False
 
@@ -25,6 +31,8 @@ def main():
     if score > threshold:
         abnormal = True
 
+    print("Anomaly Score:", score, "Threshold:", threshold)
+
     if abnormal == True:
 
         process = {}
@@ -34,10 +42,10 @@ def main():
         for id,val in loss.items():
             process[Dict["hash"][id]] = val
 
-        sortedProcesses = dict(sorted(process.items(), key=lambda x: x[1], reverse=True))
+        sortedProcesses = dict(sorted(loss.items(), key=lambda x: x[1], reverse=True))
 
         for name,val in sortedProcesses.items():
-            print("Process:", name, "Reconstruction loss:", val)
+            print("Process:", name, "Name", Dict["hash"][name], "Reconstruction loss:", val)
     else:
         print("No Malicious Nodes Found")    
 

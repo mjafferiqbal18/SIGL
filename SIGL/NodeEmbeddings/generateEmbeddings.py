@@ -1,6 +1,6 @@
 from gensim.models import Word2Vec
 
-
+# Generate source embeddings for ALaCarte Model
 def source(word_vectors):
     
     src = []
