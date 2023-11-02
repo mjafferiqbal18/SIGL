@@ -60,6 +60,7 @@ pip3 install jenkspy
 pip3 install stellargraph
 pip3 install tensorflow==2.11.0
 pip3 install keras==2.11.0
+pip3 install spektralgraph
 
 git clone https://github.com/IbrahimSanaullah/SIGL.git
 

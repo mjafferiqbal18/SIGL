@@ -11,8 +11,7 @@ from spektral.data import Graph,BatchLoader,Dataset, SingleLoader
 
 def splitComponents(pathName):
         componentList = pathName.split("/")
-        componentList.pop(0)
-        if '' in componentList:
+        while '' in componentList:
             componentList.remove('')
         return componentList
 
@@ -39,7 +38,7 @@ def converttoSpektral(graph, validation = False, alacarte = None):
         summed_matrix = np.zeros(128)   
         for component in components:
             if validation == True and component in alacarte:
-                summed_matrix = summed_matrix + alacarte[component]
+                summed_matrix = summed_matrix + alacarte[component] 
             else:
                 summed_matrix = summed_matrix  + wv[component]
         normalized_matrix = summed_matrix /np.linalg.norm(summed_matrix)
@@ -76,7 +75,7 @@ def getGraphs():
 
     spektralGraphs = []
 
-    with open("SIGL/DatasetGeneration/dataset.json") as line:
+    with open("SIGL/DatasetGeneration/trainingDataset.json") as line:
         graphs = json.load(line)
 
     for graph in graphs:

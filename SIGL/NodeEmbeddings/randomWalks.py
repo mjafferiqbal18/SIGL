@@ -12,7 +12,8 @@ def getPath(node,graph):
 # Helper function for getPath, splits a given path into indiviual components
 def splitComponents(pathName):
     componentList = pathName.split("/")
-    componentList.pop(0)
+    while '' in componentList:
+        componentList.remove('')
     return componentList
 
 
@@ -58,7 +59,7 @@ def generateWalks():
 
 
     paths = list()
-    with open("SIGL/DatasetGeneration/dataset.json") as line:
+    with open("SIGL/DatasetGeneration/trainingDataset.json") as line:
         dataset = json.load(line)
 
 

@@ -10,13 +10,12 @@ from SIGL.Autoencoder.createSpekralGraphs import getGraphs
 def autoencoder():
 
     graphs = getGraphs()
-    epochs = 100
+    epochs = 20
     loss_fn = MeanSquaredError()
     optimizer = Adam(learning_rate=0.001)
 
     #Define the autoencoder model
-
-    class Net(Model):
+    class NN(Model):
         def __init__(self):
             super().__init__()
             self.conv1 = GraphSageConv(64, activation="relu")
@@ -33,7 +32,7 @@ def autoencoder():
             return output
         
 
-    auto = Net()
+    auto = NN()
 
     # Train to reduce reconstruction error
     
@@ -61,5 +60,5 @@ def autoencoder():
     
 
     auto.save("auto")
-    #return auto
+    
 

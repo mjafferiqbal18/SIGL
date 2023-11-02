@@ -22,9 +22,9 @@ def convertGraph(graph, val = True):
     else:
         directory = "SIGL/DatasetGeneration/testingGraphs"
 
-    execmap = {"7zip":"/usr/bin/p7zip", "onedrive":"/usr/bin/onedrive", "skype": "usr/bin/skypeforlinux", "teamviewer":"usr/bin/teamviewer","winrar":"usr/bin/rar","filezilla":"usr/bin/filezilla","shotcut":"/usr/lib/shotcut","pwsafe":"/usr/bin/pwsafe","firefox":"/usr/bin/firefox","dropbox":"/usr/bin/dropbox"}    
+ 
 
-    testDict = processSPADEJSON(graph,f"./{directory}/{graph}",execmap[graphName])
+    testDict = processSPADEJSON(graph,f"./{directory}/{graph}")
 
     targets = []
 
@@ -47,10 +47,13 @@ def convertGraph(graph, val = True):
 
 
 
-def JenksMaxZoneAvg(nodeLosses):
+def JenksMaxZoneAvg(nodeLosses, testing = False):
     x = JenksNaturalBreaks(3)
     x.fit(nodeLosses)
-    return max(np.mean(x.groups_[0]),np.mean(x.groups_[1]),np.mean(x.groups_[2]))
+    if testing == False:
+        return max(np.mean(x.groups_[0]),np.mean(x.groups_[1]),np.mean(x.groups_[2]))
+    else:
+        return x.groups_[2]
 
 
 def reconstructNodes(graph,auto):
@@ -114,5 +117,6 @@ def main():
     print("Done")
 
 
-if len(sys.argv) == 1:
-    main()
+
+if __name__ == "__main__":
+   main()

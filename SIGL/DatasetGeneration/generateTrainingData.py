@@ -3,17 +3,15 @@ import json
 import sys
 
 
-def processSPADEJSON(fileName,directory,executableName):
+def processSPADEJSON(fileName,directory):
 
     with open(directory) as line:
         graph = json.load(line)
 
     edges = [] # Edges in the graph represented as a list of tuples
-    tempEdges = [] 
     hashNames = {} # Maps hash of each node to it's path name
     process = {} # Stores if a node is a process or artifact
-    exclude = [] # Used to remove all non compatible Artifacts e.g. unix sockets
-
+    
     for node in graph:
         # Handling nodes
         if "id" in node:
@@ -22,41 +20,21 @@ def processSPADEJSON(fileName,directory,executableName):
                     hashNames[node['id']] = node['annotations']['path']
                     process[node['id']] = 0
                 except:
-                    exclude.append(node["id"])
+                    hashNames[node['id']] = node['annotations']['subtype'].replace(" ", "")
+                    process[node['id']] = 0
             if node['type'] == "Process":
                 hashNames[node['id']] = node['annotations']['exe']
                 process[node['id']] = 1
-        # Handling edges        
+        # Handling edges
         else:
-            if node['to'] in exclude or node['from'] in exclude:
-                tempEdges.append((node['to'],node['from']))
-            else:
-                if node["to"] != node["from"]:    
-                    edges.append((node['to'],node['from']))
-
-   
-
-    for node in exclude:
-      
-        pre = []
-        post = []
-        for l,r in tempEdges:
-            if l == node:
-                post.append(r)
-            if r == node:
-                pre.append(l)                   
-        for i in pre:
-            for j in post:
-                edges.append((i,j))
-
-
+            if node["to"] != node["from"]:  #Remove self edge
+                edges.append((node['to'],node['from']))
 
     jsonDict = {
         "name": fileName,
-        "exe": executableName,
         "edges": edges,
         "hash": hashNames,
-        "types": process 
+        "types": process
     }
 
     return jsonDict
@@ -67,27 +45,29 @@ def processSPADEJSON(fileName,directory,executableName):
 
 def generateDataset():
 
-    graphs = os.listdir("SIGL/DatasetGeneration/graphs")
+    base = os.path.dirname(os.path.abspath(__file__))
+    trainingDir = os.path.join(base,"trainingGraphs")
 
-    execmap = {"7zip":"/usr/bin/p7zip", "onedrive":"/usr/bin/onedrive", "skype": "usr/bin/skypeforlinux", "teamviewer":"usr/bin/teamviewer","winrar":"usr/bin/rar","filezilla":"usr/bin/filezilla","shotcut":"/usr/lib/shotcut","pwsafe":"/usr/bin/pwsafe","firefox":"/usr/bin/firefox","dropbox":"/usr/bin/dropbox"}
+    graphsList = os.listdir(trainingDir)
 
-    output_list = []
+    outputList = []
 
-    for i in graphs:
-        graphName = i.split("-")
+    for graph in graphsList:
 
-        directory = f"SIGL/DatasetGeneration/graphs/{i}"
-        executableName = execmap[graphName[0]]
-            
-        jsonDict = processSPADEJSON(graphName[0]+graphName[1][0],directory,executableName)
+        graphName = graph.split("-")
 
-        output_list.append(jsonDict)   
+        directory = os.path.join(trainingDir, graph)
 
+        jsonDict = processSPADEJSON(graphName[0]+graphName[1][0],directory)
 
-    with open("SIGL/DatasetGeneration/dataset.json", "w") as f:
+        outputList.append(jsonDict)
+
+ 
+    with open(os.path.join(base, "trainingDataset.json") , "w") as f:
+
         f.write("[\n")
-        f.write(json.dumps(output_list[0]))
-        if len(output_list) > 1:
-            for obj in output_list[1:]:
+        f.write(json.dumps(outputList[0]))
+        if len(outputList) > 1:
+            for obj in outputList[1:]:
                 f.write(",\n" + json.dumps(obj))
         f.write("\n]")

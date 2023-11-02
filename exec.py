@@ -1,4 +1,4 @@
-from validation import convertGraph,reconstructNodes
+from validation import convertGraph,reconstructNodes, JenksMaxZoneAvg
 import sys
 import numpy as np
 from keras.models import load_model
@@ -19,19 +19,23 @@ def main():
     auto.compile(optimizer=opt, loss=los)
     loss = reconstructNodes(graph,auto)
 
-    abnormal = False
+    abnormal = True
 
     with open("threshold.txt", "r") as f:
         content = f.read()
 
     threshold = np.float32(content)
 
-    score = np.mean(list(loss.values()))
+    group = JenksMaxZoneAvg(list(loss.values()), testing = True)
+    score = np.mean(group)
 
+    print(score, threshold)
+    
     if score > threshold:
         abnormal = True
 
     print("Anomaly Score:", score, "Threshold:", threshold)
+
 
     if abnormal == True:
 
@@ -43,9 +47,12 @@ def main():
             process[Dict["hash"][id]] = val
 
         sortedProcesses = dict(sorted(loss.items(), key=lambda x: x[1], reverse=True))
-
+        counter = 0
         for name,val in sortedProcesses.items():
+            if counter >= len(group):
+                break
             print("Process:", name, "Name", Dict["hash"][name], "Reconstruction loss:", val)
+            counter = counter +1     
     else:
         print("No Malicious Nodes Found")    
 
