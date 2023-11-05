@@ -13,10 +13,9 @@ cd SPADE/
 git checkout version-process
 
 ./configure
-make
+make KERNEL_MODULES=true
 
 bin/installPostgres
-make KERNEL_MODULES=true
 sudo chmod ug+s `which auditctl`
 sudo chmod ug+s `which iptables`
 sudo chmod ug+s `which kmod`
@@ -32,9 +31,6 @@ sudo service auditd restart
 echo "Installing Graphviz..."
 sudo apt install graphviz -y
 
-echo "Setting up scripts for SIGs"
-cd /home/vagrant
-git clone https://github.com/zeerakb1/SIGL-scripts.git
 
 echo "Installing dependencies for SIGL"
 sudo apt update -y && sudo apt upgrade -y
@@ -61,6 +57,8 @@ pip3 install stellargraph
 pip3 install tensorflow==2.11.0
 pip3 install keras==2.11.0
 pip3 install spektralgraph
+pip3 install gensim
+
 
 git clone https://github.com/IbrahimSanaullah/SIGL.git
 
