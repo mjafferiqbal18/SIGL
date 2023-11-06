@@ -8,6 +8,7 @@ sudo apt-get update
 sudo apt-get install -y openjdk-11-jdk
 sudo apt-get install -y auditd bison clang cmake curl flex fuse git ifupdown libaudit-dev libfuse-dev linux-headers-`uname -r` lsof pkg-config unzip uthash-dev
 
+git clone https://github.com/IbrahimSanaullah/SIGL.git
 git clone https://github.com/zeerakb1/SPADE.git
 cd SPADE/
 git checkout version-process
@@ -56,9 +57,8 @@ pip3 install jenkspy
 pip3 install stellargraph
 pip3 install tensorflow==2.11.0
 pip3 install keras==2.11.0
-pip3 install spektralgraph
+pip3 install spektral
 pip3 install gensim
 
 
-git clone https://github.com/IbrahimSanaullah/SIGL.git
 
