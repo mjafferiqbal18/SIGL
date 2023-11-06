@@ -58,7 +58,7 @@ send_spade_command(){
 
 install_skype(){
   echo "Installing skype..."
-  wget https://go.skype.com/skypeforlinux-64.deb
+  #wget https://go.skype.com/skypeforlinux-64.deb
   sudo apt install ./skypeforlinux-64.deb -y
 
   if [ $? -eq 0 ]; then
@@ -68,7 +68,7 @@ install_skype(){
    exit 1
   fi
 
-  sudo rm skypeforlinux-64.deb
+  #sudo rm skypeforlinux-64.deb
 }
 
 remove_skype(){
@@ -157,15 +157,15 @@ remove_7zip(){
 
 install_dropbox(){
   echo "Installing dropbox..."
-  wget https://linux.dropbox.com/packages/ubuntu/dropbox_2015.10.28_amd64.deb
-  sudo apt install ./dropbox_2015.10.28_amd64.deb -y
+  wget -O dropbox.deb https://linux.dropbox.com/packages/ubuntu/dropbox_2019.02.14_amd64.deb
+  sudo apt install ./dropbox.deb -y
   if [ $? -eq 0 ]; then
     echo "Installation of dropbox for Linux was successful."
   else
     echo "Installation of dropbox for Linux failed."
     exit 1
   fi
-  sudo rm ./dropbox_2015.10.28_amd64.deb
+  sudo rm ./dropbox.deb
 }
 
 remove_dropbox(){
@@ -330,7 +330,8 @@ main_function(){
     sleep 2
     start_spade
     echo "Running SPADE Control"
-    send_spade_command "add reporter Audit outputLog=/tmp/$name-$i.log"
+    send_spade_command "add reporter Audit localEndpoints=true namespaces=true IPC=true networkAddressTranslation=true outputLog=/tmp/$name-$i.log"
+    sleep 10
     send_spade_command "exit"
     cd /home/vagrant/
     sleep 5
@@ -359,8 +360,10 @@ main_function(){
     sleep 2
     cd /home/vagrant/SPADE
     send_spade_command "remove reporter Audit"
+    sleep 20
     echo "Stopping SPADE"
     stop_spade
+    sleep 20
     # Remove software installation
     if [[ $name = @(geany|Geany) ]]; then
       remove_geany
