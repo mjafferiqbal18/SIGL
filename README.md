@@ -3,7 +3,7 @@ This repository contains code for the implementation of a variation of the [SIGL
 
 ## Execution
 
-To detect a graph for anomalies, locate the desired graph within the "testingGraphs" folder and proceed by executing the following command.
+To detect a graph for anomalies, locate the desired graph within the [testingGraphs](https://github.com/IbrahimSanaullah/SIGL/tree/main/SIGL/DatasetGeneration/testingGraphs) folder and proceed by executing the following command.
 
 ```bash
 python exec.py graphName
