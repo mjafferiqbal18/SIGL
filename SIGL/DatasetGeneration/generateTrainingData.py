@@ -182,7 +182,7 @@ def generateDatasetwithDNS():
     for graph in graphsList:
         graphName= graph.split('.') #gets you 'graph-1' for example from 'graph-1.json'
         graphDir = os.path.join(trainingDir, graph)
-        dnsLogName= graphName[0]+'txt'
+        dnsLogName= graphName[0]+'_dns.txt'
         dnsLogDir=None
 
         if dnsLogName in dnsList:
