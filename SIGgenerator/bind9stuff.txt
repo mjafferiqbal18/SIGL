@@ -1,0 +1,95 @@
+// #navigate to cconfig file
+sudo nano /etc/bind/named.conf
+ 
+// #add this to config file
+logging {
+    channel my_file {
+    file "/tmp/bind9test.log" versions 3 size 100m;
+    severity info;
+    print-time yes;
+    print-category yes;
+    print-severity yes;
+  };
+
+  category default { my_file; };
+  category queries { my_file; };
+
+  # Disable a category by setting its destination to null
+  category lame-servers { null; };
+};
+
+//     channel new_log {
+//         file "/home/vagrant/bind9logtest" versions 3 size 50m;
+//         severity info;
+//         print-time yes;
+//         print-category yes;
+//     };
+
+//     category default { new_log; };
+// };
+
+// #restart bind9
+sudo systemctl restart bind9
+
+// #ping some random sites
+
+// #go back to the config file and comment out the logging stuff we added
+
+// #restart bind9
+
+
+logging {
+    channel my_file {
+    file "/tmp/bindLogs/dns-$name-$i.log" versions 3 size 100m;
+    severity info;
+    print-time yes;
+    print-category yes;
+    print-severity yes;
+  };
+
+  category default { my_file; };
+  category queries { my_file; };
+};
+
+
+
+
+#!/bin/bash
+
+# Function for starting BIND9
+start_bind9() {
+    systemctl start named
+}
+
+# Function for restarting BIND9
+restart_bind9() {
+    systemctl restart named
+}
+
+# Function for stopping BIND9
+stop_bind9() {
+    systemctl stop named
+}
+
+# Ensure BIND9 is stopped
+stop_bind9
+
+# Get the name and i arguments
+name="$1"
+i="$2"
+
+# Append the logging configuration to /etc/bind/named.conf
+echo -e "\nlogging {\n" >> /etc/bind/named.conf
+echo -e "    channel my_file {\n" >> /etc/bind/named.conf
+echo -e "        file \"/tmp/bindLogs/dns-$name-$i.log\" versions 3 size 200m;\n" >> /etc/bind/named.conf
+echo -e "        severity info;\n" >> /etc/bind/named.conf
+echo -e "        print-time yes;\n" >> /etc/bind/named.conf
+echo -e "        print-category yes;\n" >> /etc/bind/named.conf
+echo -e "        print-severity yes;\n" >> /etc/bind/named.conf
+echo -e "    };\n" >> /etc/bind/named.conf
+echo -e "\n    category default { my_file; };\n" >> /etc/bind/named.conf
+echo -e "    category queries { my_file; };\n" >> /etc/bind/named.conf
+echo "};" >> /etc/bind/named.conf
+
+# Start BIND9 to collect DNS logs
+start_bind9
